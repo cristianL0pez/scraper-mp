@@ -1,0 +1,18 @@
+{% extends 'usuarios/base_auth.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<h2 class="text-2xl font-bold mb-6 text-center text-gray-800">
+    <i class="fas fa-user-plus mr-2"></i>Crear Cuenta
+</h2>
+<form method="post" class="space-y-4">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md transition duration-300">
+        Registrarse
+    </button>
+</form>
+<div class="mt-4 text-center">
+    <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800">¿Ya tienes cuenta? Inicia Sesión</a>
+</div>
+{% endblock %}
