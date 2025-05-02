@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}LiciApp{% endblock %}</title>
+
+    <!-- Fonts y estilos -->
+    <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,400,700" rel="stylesheet">
+    <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+</head>
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include "partials/sidebar.html" %}
+        <!-- End of Sidebar -->
+
+        <!-- Topbar -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <div id="content">
+                {% include "partials/topbar.html" %} 
+                {% block content %}
+                {% endblock %}
+            </div>   
+        </div>
+        <!-- End of Topbar -->
+
+            
+    </div>
+      
+
+ 
+
+</div>
+<!-- End of Page Wrapper -->
+
+<!-- Scroll to Top Button-->
+<a class="scroll-to-top rounded" href="#page-top"><i class="fas fa-angle-up"></i></a>
+
+<!-- Logout Modal-->
+{% include "partials/logout_modal.html" %}
+
+<!-- Bootstrap core JavaScript-->
+{% include "partials/scripts.html" %}
+
+
+<!-- JS -->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+<script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+</body>
+</html>

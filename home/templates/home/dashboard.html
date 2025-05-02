@@ -1,0 +1,136 @@
+{% extends 'home/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Encabezado del dashboard -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Dashboard de Licitaciones</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i class="fas fa-download fa-sm text-white-50"></i> Exportar Reporte
+    </a>
+</div>
+
+<!-- Fila de métricas -->
+<div class="row">
+
+    <!-- Total licitaciones -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Total Licitaciones</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ total_licitaciones }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Licitaciones con monto -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Con Monto definido</div>
+                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ monto_total }}</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tipos de licitaciones -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tipos</div>
+                {% for tipo in tipos %}
+                    <div class="small">{{ tipo.tipo }}: <strong>{{ tipo.cantidad }}</strong></div>
+                {% empty %}
+                    <div class="small text-muted">Sin datos</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Top organismos -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Organismos principales</div>
+                {% for org in organismos %}
+                    <div class="small">{{ org.organismo|truncatechars:25 }}: <strong>{{ org.cantidad }}</strong></div>
+                {% empty %}
+                    <div class="small text-muted">Sin datos</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- Gráfico de publicaciones -->
+<div class="card shadow mb-5">
+    <div class="card-body">
+        <h5 class="card-title">Publicaciones por mes</h5>
+        <canvas id="chartMeses" height="100"></canvas>
+    </div>
+</div>
+
+<!-- Tabla de licitaciones recientes -->
+<div class="card shadow mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Últimas licitaciones</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Organismo</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lic in licitaciones_recientes %}
+                    <tr>
+                        <td>{{ lic.id_licitacion }}</td>
+                        <td>{{ lic.nombre|truncatechars:50 }}</td>
+                        <td>{{ lic.organismo|truncatechars:30 }}</td>
+                        <td>{{ lic.fecha_publicacion|date:"d M Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center text-muted">No hay datos recientes</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('chartMeses').getContext('2d');
+const chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for p in publicaciones_por_mes %}'{{ p.mes|date:"M Y" }}',{% endfor %}],
+        datasets: [{
+            label: 'Licitaciones publicadas',
+            data: [{% for p in publicaciones_por_mes %}{{ p.cantidad }},{% endfor %}],
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: { beginAtZero: true }
+        }
+    }
+});
+</script>
+
+{% endblock %}
